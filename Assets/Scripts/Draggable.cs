@@ -5,8 +5,8 @@ using UnityEngine.EventSystems;
 
 public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public enum Type { SPELL, BUFF };
-    public Type typeOfCard = Type.SPELL;
+    
+    public CardData.CardType typeOfCard = CardData.CardType.SPELLAOE;
     private Transform _canvasParent;
     public Transform canvasParent
     {
