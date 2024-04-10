@@ -10,7 +10,7 @@ public class CardData : ScriptableObject
     public enum CardType { GUILE, MALEVOLENCE, BENEVOLENCE };
     public CardEffectType cardEffectType;
     public CardType cardType;
-    public string spritePath;
+    public Sprite sprite;
 
     // 可以是伤害，回复数量 SPELLAOE SPELLSINGLE
     public float EffectVar;
