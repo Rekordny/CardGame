@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: HumanW1
   m_EditorClassIdentifier: 
   characterName: HumanW1
-  _health: 20
-  _attack: 2
-  _defense: 1
-  _moveSpeed: 0.3
-  _attackRange: 0.4
-  _attackSpeed: 0.3
+  maxHealth: 20
+  attack: 5
+  defense: 2
+  moveSpeed: 2
+  attackRange: 2
+  attackSpeed: 0.3

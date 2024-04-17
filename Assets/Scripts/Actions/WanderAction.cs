@@ -1,32 +1,38 @@
-using NodeCanvas.Framework;
+﻿using NodeCanvas.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class WanderAction : ActionTask
 {
-    public BBParameter<NavMeshAgent> navAgent;
-    public BBParameter<Animator> animator;
-    public BBParameter<float> moveSpeed;
+    private NavMeshAgent navAgent;
+    
+    public BBParameter<Character> character;
     public BBParameter<float> lookAheadDistance;
     public BBParameter<float> lookAheadRadius;
 
-    private readonly int walkinParam = Animator.StringToHash("Walking");
 
     // ==Awake
     protected override string OnInit()
     {
+        // 尼玛的啥比不让我链接到外面，只能自己找reference
+        //characterReference = animator.value.gameObject.GetComponent<Character>();
+        //Debug.Log(characterReference.value.characterName);
         return base.OnInit();
     }
 
     protected override void OnExecute()
     {
-        base.OnExecute();
+        navAgent = character.value.GetComponent<NavMeshAgent>();
+        // 在这设置agent speed
+        // navAgent.value.speed = characterReference.value.MoveSpeed;
+        character.value.SetTriggerAnimation(Utils.walkingParam);
     }
 
     protected override void OnUpdate()
     {
-        if (!navAgent.value.hasPath)
+        //Debug.Log(characterReference.value.characterName);
+        if (!navAgent.hasPath)
         {
             Vector3 wanderPoint = Vector3.zero;
             NavMeshHit hit;
@@ -37,22 +43,22 @@ public class WanderAction : ActionTask
                 wanderPoint = lookAheadPoint + randomPoint;
             }
             while (!NavMesh.SamplePosition(wanderPoint, out hit, lookAheadRadius.value + 1f, NavMesh.AllAreas));
-            navAgent.value.destination = hit.position;
+            navAgent.destination = hit.position;
         }
 
-        Vector3 direction = navAgent.value.nextPosition - agent.transform.position;
+        Vector3 direction = navAgent.nextPosition - agent.transform.position;
         Quaternion desiredRotation = Quaternion.LookRotation(direction);
 
         agent.transform.rotation = Quaternion.Slerp(agent.transform.rotation, desiredRotation, Time.deltaTime);
 
-        if(Vector3.Distance(agent.transform.position, navAgent.value.destination)< 0.5f)
-            navAgent.value.ResetPath();
+        if(Vector3.Distance(agent.transform.position, navAgent.destination)< 0.5f)
+            navAgent.ResetPath();
     }
 
     protected override void OnStop()
     {
-        if (navAgent.value.isOnNavMesh)
-            navAgent.value.ResetPath();
-        animator.value.SetBool(walkinParam, false);
+        if (navAgent.isOnNavMesh)
+            navAgent.ResetPath();
+        character.value.SetTriggerAnimation(Utils.idlingParam);
     }
 }
